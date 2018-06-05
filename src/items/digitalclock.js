@@ -61,7 +61,7 @@ const getFontSize = (fontFamily, initialSize, maxWidth, context) => {
 export default class DigitalClockWidget extends Widget {
 
   constructor(core, options) {
-    super(core, {
+    super(core, options, {
       dimension: {
         width: 300,
         height: 50
@@ -69,7 +69,7 @@ export default class DigitalClockWidget extends Widget {
     }, {
       fontFamily: 'Monospace',
       fontColor: '#ffffff'
-    }, options);
+    });
 
     this.$tmpCanvas = document.createElement('canvas');
     this.tmpContext = this.$tmpCanvas.getContext('2d');
