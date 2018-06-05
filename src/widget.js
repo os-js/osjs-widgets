@@ -136,7 +136,7 @@ const onmousedown = (ev, $root, widget) => {
 
 export default class Widget extends EventHandler {
 
-  constructor(core, attrs = {}, settings = {}, options = {}) {
+  constructor(core, attrs = {}, settings = {}, options) {
     super('Widget');
 
     this.core = core;

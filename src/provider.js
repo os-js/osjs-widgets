@@ -77,8 +77,8 @@ export default class WidgetServiceProvider {
         }
       },
 
-      create: (name, options = {}) => {
-        const ClassRef = this.registry[name];
+      create: (options) => {
+        const ClassRef = this.registry[options.name];
         const widget = new ClassRef(this.core, options);
         this.widgets.push(widget);
 
@@ -95,9 +95,6 @@ export default class WidgetServiceProvider {
     this.core.on('osjs/desktop:transform', () => {
       this.widgets.forEach(widget => widget.updatePosition());
     });
-
-    // TODO: Remove me!
-    iface.create('digitalclock');
   }
 
   start() {
