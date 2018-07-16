@@ -19,8 +19,22 @@ This is the Widgets module for OS.js v3
 
 In you startup procedure, simply import and register:
 
-```
+```javascript
 import {WidgetServiceProvider} from '@osjs/widgets';
 
 osjs.register(WidgetServiceProvider);
+```
+
+To set up a default set of widgets in the user settings, modify your client configuration file:
+
+```javascript
+{
+  desktop: {
+    settings: {
+      widgets: [{
+        name: 'digitalclock'
+      }]
+    }
+  }
+}
 ```
