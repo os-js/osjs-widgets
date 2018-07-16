@@ -149,6 +149,7 @@ export default class Widget extends EventHandler {
 
     this.core = core;
     this.index = -1;
+    this.dialog = null;
     this.$element = document.createElement('div');
     this.$canvas = document.createElement('canvas');
     this.context = this.$canvas.getContext('2d');
@@ -201,6 +202,10 @@ export default class Widget extends EventHandler {
     this.emit('destroy', this);
 
     this.saveDebounce = clearTimeout(this.saveDebounce);
+
+    if (this.dialog) {
+      this.dialog = this.dialog.destroy();
+    }
 
     if (this.$element) {
       if (this.$element.parentNode) {
@@ -290,6 +295,32 @@ export default class Widget extends EventHandler {
   saveSettings() {
     this.saveDebounce = clearTimeout(this.saveDebounce);
     this.saveDebounce = setTimeout(() => this._saveSettings(), 100);
+  }
+
+  _createDialog(options, callbackRender, callbackValue) {
+    if (this.dialog) {
+      return;
+    }
+
+    const callbackButton = (btn, options) => {
+      if (btn === 'ok') {
+        this.options = merge(this.options, options);
+        this.saveSettings();
+      }
+    };
+
+    const dialogOptions = {
+      buttons: ['ok', 'cancel'],
+      window: options || {}
+    };
+
+    this.dialog = this.core.make('osjs/dialogs')
+      .create(dialogOptions, callbackValue, callbackButton)
+      .render(callbackRender);
+
+    this.dialog.win.on('destroy', () => (this.dialog = null));
+
+    return this.dialog;
   }
 
 }
