@@ -126,6 +126,8 @@ const onmousedown = (ev, $root, widget) => {
 
     widget.$element.classList.remove('active');
     $root.setAttribute('data-window-action', String(false));
+
+    widget.saveSettings();
   };
 
   window.addEventListener('mousemove', mousemove);
@@ -260,8 +262,6 @@ export default class Widget extends EventHandler {
     this.$element.style.height = String(height) + 'px';
     this.$canvas.width = width;
     this.$canvas.height = height;
-
-    this.saveSettings();
   }
 
   updatePosition() {
@@ -272,8 +272,6 @@ export default class Widget extends EventHandler {
     this.$element.style.right = getValue(right);
     this.$element.style.top = getValue(top);
     this.$element.style.bottom = getValue(bottom);
-
-    this.saveSettings();
   }
 
   _saveSettings() {
