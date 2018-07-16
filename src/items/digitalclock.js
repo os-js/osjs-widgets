@@ -75,9 +75,19 @@ export default class DigitalClockWidget extends Widget {
     this.tmpContext = this.$tmpCanvas.getContext('2d');
 
     this.on('resize', () => this.resize());
+    this.on('contextmenu', ev => core.make('osjs/contextmenu').show({
+      position: ev,
+      menu: [{
+        label: 'Set Color',
+        onclick: () => this.createColorDialog()
+      }, {
+        label: 'Set Font',
+        onclick: () => this.createFontDialog()
+      }]
+    }));
   }
 
-  resize() {
+  compute() {
     const {fontFamily, fontColor} = this.options;
     const {width, height} = this.$canvas;
     const {$tmpCanvas, tmpContext} = this;
@@ -92,6 +102,10 @@ export default class DigitalClockWidget extends Widget {
     tmpContext.textBaseline = 'middle';
   }
 
+  resize() {
+    this.compute();
+  }
+
   render({context, width, height}) {
     const {$tmpCanvas, tmpContext} = this;
     const tmpWidth = $tmpCanvas.width;
@@ -104,6 +118,31 @@ export default class DigitalClockWidget extends Widget {
     tmpContext.fillText(text, tmpWidth / 2, tmpHeight / 2);
     context.clearRect(0, 0, width, height);
     context.drawImage($tmpCanvas, x, y, tmpWidth, tmpHeight);
+  }
+
+  createFontDialog() {
+    this.core.make('osjs/dialog', 'font', {
+      name: this.options.fontFamily,
+      controls: ['name']
+    }, (btn, value) => {
+      if (btn === 'ok') {
+        this.options.fontFamily = value.name;
+        this.resize();
+        this.saveSettings();
+      }
+    });
+  }
+
+  createColorDialog() {
+    this.core.make('osjs/dialog', 'color', {
+      color: this.options.fontColor
+    }, (btn, value) => {
+      if (btn === 'ok') {
+        this.options.fontColor = value.hex;
+        this.resize();
+        this.saveSettings();
+      }
+    });
   }
 
 }
