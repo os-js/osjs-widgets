@@ -77,13 +77,13 @@ export default class WidgetServiceProvider {
         }
       },
 
-      create: (options) => {
-        const ClassRef = this.registry[options.name];
-        const widget = new ClassRef(this.core, options);
-        this.widgets.push(widget);
+      create: (item) => {
+        const ClassRef = this.registry[item.name];
+        const widget = new ClassRef(this.core, item.options);
+        const len = this.widgets.push(widget);
 
         if (this.inited) {
-          widget.init();
+          widget.init(len - 1);
         }
       },
 
@@ -99,7 +99,7 @@ export default class WidgetServiceProvider {
 
   start() {
     this.inited = true;
-    this.widgets.forEach(p => p.init());
+    this.widgets.forEach((p, i) => p.init(i));
   }
 
 }

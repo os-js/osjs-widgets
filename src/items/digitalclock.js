@@ -78,7 +78,7 @@ export default class DigitalClockWidget extends Widget {
   }
 
   resize() {
-    const {fontFamily, fontColor} = this.settings;
+    const {fontFamily, fontColor} = this.options;
     const {width, height} = this.$canvas;
     const {$tmpCanvas, tmpContext} = this;
     const size = getFontSize(fontFamily, height, width, tmpContext);

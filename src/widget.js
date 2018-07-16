@@ -27,7 +27,9 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
+
 import {EventHandler} from '@osjs/common';
+import merge from 'deepmerge';
 
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 200;
@@ -35,7 +37,6 @@ const MAX_WIDTH = 800;
 const MAX_HEIGHT = 800;
 const DEFAULT_MARGIN = 15;
 const EMIT_TIMEOUT = 44;
-
 const isNull = val => typeof val === 'undefined' || val === null;
 
 const getPosition = (core, position, nullValue = null) => {
@@ -89,7 +90,7 @@ const onmousedown = (ev, $root, widget) => {
     left: widget.$element.offsetLeft,
     top: widget.$element.offsetTop
   };
-  const startDimension = Object.assign({}, widget.settings.dimension);
+  const startDimension = Object.assign({}, widget.options.dimension);
   const resize = ev.target.classList.contains('osjs-widget-resize');
   const {minDimension, maxDimension} = widget.attributes;
 
@@ -107,13 +108,13 @@ const onmousedown = (ev, $root, widget) => {
       newWidth = Math.min(maxDimension.width, Math.max(minDimension.width, newWidth));
       newHeight = Math.min(maxDimension.height, Math.max(minDimension.height, newHeight));
 
-      widget.settings.dimension.width = newWidth;
-      widget.settings.dimension.height = newHeight;
+      widget.options.dimension.width = newWidth;
+      widget.options.dimension.height = newHeight;
       widget.updateDimension();
       debounce = setTimeout(() => widget.emit('resize'), EMIT_TIMEOUT);
     } else {
-      widget.settings.position.top = startPosition.top + diffY;
-      widget.settings.position.left = startPosition.left + diffX;
+      widget.options.position.top = startPosition.top + diffY;
+      widget.options.position.left = startPosition.left + diffX;
       widget.updatePosition();
       debounce = setTimeout(() => widget.emit('move'), EMIT_TIMEOUT);
     }
@@ -136,14 +137,20 @@ const onmousedown = (ev, $root, widget) => {
 
 export default class Widget extends EventHandler {
 
+  /**
+   * @param {Object} options The options from the provider create function (usually settings storage result)
+   * @param {Object} [attrs] Widget attributes
+   * @param {Object} [settings] A set of defaults for the settings storage
+   */
   constructor(core, options, attrs = {}, settings = {}) {
     super('Widget');
 
     this.core = core;
+    this.index = -1;
     this.$element = document.createElement('div');
     this.$canvas = document.createElement('canvas');
     this.context = this.$canvas.getContext('2d');
-    this.options = options;
+    this.saveDebounce = null;
     this.attributes = Object.assign({}, {
       aspect: false,
       canvas: true,
@@ -182,20 +189,16 @@ export default class Widget extends EventHandler {
       this.attributes.maxDimension.height = maxDimension.width * aspect;
     }
 
-    // TODO: Save settings
-    this.settings = Object.assign({
-      position: {
-        top: null,
-        left: null,
-        right: null,
-        bottom: null,
-      },
+    this.options = Object.assign({
+      position: Object.assign({}, this.attributes.position),
       dimension: Object.assign({}, this.attributes.dimension)
-    }, settings);
+    }, settings, options);
   }
 
   destroy() {
     this.emit('destroy', this);
+
+    this.saveDebounce = clearTimeout(this.saveDebounce);
 
     if (this.$element) {
       if (this.$element.parentNode) {
@@ -213,8 +216,8 @@ export default class Widget extends EventHandler {
 
   start() {
     const render = () => this.render({
-      width: this.settings.dimension.width,
-      height: this.settings.dimension.height,
+      width: this.options.dimension.width,
+      height: this.options.dimension.height,
       canvas: this.$canvas,
       context: this.context
     });
@@ -230,7 +233,7 @@ export default class Widget extends EventHandler {
     }
   }
 
-  init() {
+  init(index) {
     const $el = this.$element;
     const $root = this.core.$root;
 
@@ -247,25 +250,48 @@ export default class Widget extends EventHandler {
       $el.appendChild(this.$canvas);
     }
 
+    this.index = index;
     this.start();
   }
 
   updateDimension() {
-    const {width, height} = this.settings.dimension;
+    const {width, height} = this.options.dimension;
     this.$element.style.width = String(width) + 'px';
     this.$element.style.height = String(height) + 'px';
     this.$canvas.width = width;
     this.$canvas.height = height;
+
+    this.saveSettings();
   }
 
   updatePosition() {
-    const {left, right, top, bottom} = getPosition(this.core, this.settings.position, 'auto');
+    const {left, right, top, bottom} = getPosition(this.core, this.options.position, 'auto');
     const getValue = val => typeof val === 'string' ? val : `${val}px`;
 
     this.$element.style.left = getValue(left);
     this.$element.style.right = getValue(right);
     this.$element.style.top = getValue(top);
     this.$element.style.bottom = getValue(bottom);
+
+    this.saveSettings();
+  }
+
+  _saveSettings() {
+    const settings = this.core.make('osjs/settings');
+    const defaults = this.core.config('desktop.settings.widgets');
+
+    const widgets = settings.get('osjs/desktop', 'widgets', defaults)
+      .map((p, i) => i === this.index ? Object.assign({}, p, {
+        options: this.options
+      }) : p);
+
+    return Promise.resolve(settings.set('osjs/desktop', 'widgets', widgets))
+      .then(() => settings.save());
+  }
+
+  saveSettings() {
+    this.saveDebounce = clearTimeout(this.saveDebounce);
+    this.saveDebounce = setTimeout(() => this._saveSettings(), 100);
   }
 
 }
