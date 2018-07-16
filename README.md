@@ -13,16 +13,24 @@
 
 This is the Widgets module for OS.js v3
 
-**PLEASE NOTE THAT THIS IS AN ALPHA PRE-RELEASE AND SUBJECT TO CHANGE WITHOUT NOTICE**
+Resources:
+
+* https://manual.os-js.org/v3/install/
+* https://manual.os-js.org/v3/guide/provider/
+* https://manual.os-js.org/v3/tutorial/widget/
 
 ## Usage
 
-In you startup procedure, simply import and register:
+In you startup scripts, simply import and register:
 
 ```javascript
 import {WidgetServiceProvider} from '@osjs/widgets';
 
 osjs.register(WidgetServiceProvider);
+```
+
+```css
+@import "~@osjs/widgets/index.scss";
 ```
 
 To set up a default set of widgets in the user settings, modify your client configuration file:
