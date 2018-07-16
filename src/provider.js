@@ -47,7 +47,7 @@ export default class WidgetServiceProvider {
   }
 
   destroy() {
-    this.widgets.forEach(widget => widget.destroy());
+    this.widgets.forEach(({widget}) => widget.destroy());
     this.widgets = [];
   }
 
@@ -62,17 +62,17 @@ export default class WidgetServiceProvider {
       },
 
       removeAll: () => {
-        this.widgets.forEach(p => p.destroy());
+        this.widgets.forEach(({widget}) => widget.destroy());
         this.widgets = [];
       },
 
       remove: (widget) => {
         const index = typeof widget === 'number'
           ? widget
-          : this.widgets.findIndex(p => p === widget);
+          : this.widgets.findIndex(w => w.widget === widget);
 
         if (index >= 0) {
-          this.widgets[index].destroy();
+          this.widgets[index].widget.destroy();
           this.widgets.splice(index, 1);
         }
       },
@@ -80,26 +80,60 @@ export default class WidgetServiceProvider {
       create: (item) => {
         const ClassRef = this.registry[item.name];
         const widget = new ClassRef(this.core, item.options);
-        const len = this.widgets.push(widget);
+        this.widgets.push({name: item.name, widget});
 
         if (this.inited) {
-          widget.init(len - 1);
+          widget.init();
         }
+
+        return widget;
       },
 
-      get: (name) => this.registry[name]
+      get: (name) => this.registry[name],
+
+      list: () => Object.keys(this.registry),
+
+      save: () => {
+        const settings = this.core.make('osjs/settings');
+        const widgets = this.widgets.map(({name, widget}) => ({
+          name,
+          options: widget.options
+        }));
+
+        return Promise.resolve(settings.set('osjs/desktop', 'widgets', widgets))
+          .then(() => settings.save());
+      }
     };
 
     this.core.singleton('osjs/widgets', () => iface);
 
     this.core.on('osjs/desktop:transform', () => {
-      this.widgets.forEach(widget => widget.updatePosition());
+      this.widgets.forEach(({widget}) => widget.updatePosition());
     });
   }
 
   start() {
     this.inited = true;
-    this.widgets.forEach((p, i) => p.init(i));
+    this.widgets.forEach(({widget}) => widget.init());
+
+
+    const desktop = this.core.make('osjs/desktop');
+    if (typeof desktop.addContextMenuEntries === 'function') {
+      desktop.addContextMenuEntries(() => {
+        const widgets = this.core.make('osjs/widgets');
+
+        return [{
+          label: 'Add Widget',
+          items: widgets.list().map(t => ({
+            label: t,
+            onclick: () => {
+              widgets.create({name: t});
+              widgets.save();
+            }
+          }))
+        }];
+      });
+    }
   }
 
 }

@@ -28,7 +28,6 @@
  * @licence Simplified BSD License
  */
 
-import {EventHandler} from '@osjs/common';
 import merge from 'deepmerge';
 
 const MIN_WIDTH = 200;
@@ -111,12 +110,12 @@ const onmousedown = (ev, $root, widget) => {
       widget.options.dimension.width = newWidth;
       widget.options.dimension.height = newHeight;
       widget.updateDimension();
-      debounce = setTimeout(() => widget.emit('resize'), EMIT_TIMEOUT);
+      debounce = setTimeout(() => widget.onResize(), EMIT_TIMEOUT);
     } else {
       widget.options.position.top = startPosition.top + diffY;
       widget.options.position.left = startPosition.left + diffX;
       widget.updatePosition();
-      debounce = setTimeout(() => widget.emit('move'), EMIT_TIMEOUT);
+      debounce = setTimeout(() => widget.onMove(), EMIT_TIMEOUT);
     }
   };
 
@@ -137,7 +136,7 @@ const onmousedown = (ev, $root, widget) => {
   $root.setAttribute('data-window-action', String(true));
 };
 
-export default class Widget extends EventHandler {
+export default class Widget {
 
   /**
    * @param {Object} options The options from the provider create function (usually settings storage result)
@@ -145,10 +144,7 @@ export default class Widget extends EventHandler {
    * @param {Object} [settings] A set of defaults for the settings storage
    */
   constructor(core, options, attrs = {}, settings = {}) {
-    super('Widget');
-
     this.core = core;
-    this.index = -1;
     this.dialog = null;
     this.$element = document.createElement('div');
     this.$canvas = document.createElement('canvas');
@@ -199,7 +195,7 @@ export default class Widget extends EventHandler {
   }
 
   destroy() {
-    this.emit('destroy', this);
+    this.onDestroy();
 
     this.saveDebounce = clearTimeout(this.saveDebounce);
 
@@ -231,7 +227,8 @@ export default class Widget extends EventHandler {
 
     this.updateDimension();
     this.updatePosition();
-    this.emit('resize,move');
+    this.onResize();
+    this.onMove();
 
     render();
 
@@ -240,7 +237,7 @@ export default class Widget extends EventHandler {
     }
   }
 
-  init(index) {
+  init() {
     const $el = this.$element;
     const $root = this.core.$root;
 
@@ -249,7 +246,7 @@ export default class Widget extends EventHandler {
 
     $el.appendChild(resizer);
     $el.addEventListener('mousedown', ev => onmousedown(ev, $root, this));
-    $el.addEventListener('contextmenu', ev => this.emit('contextmenu', ev));
+    $el.addEventListener('contextmenu', ev => this.onContextMenu(ev));
     $el.classList.add('osjs-widget');
     $root.appendChild($el);
 
@@ -257,7 +254,6 @@ export default class Widget extends EventHandler {
       $el.appendChild(this.$canvas);
     }
 
-    this.index = index;
     this.start();
   }
 
@@ -279,22 +275,43 @@ export default class Widget extends EventHandler {
     this.$element.style.bottom = getValue(bottom);
   }
 
-  _saveSettings() {
-    const settings = this.core.make('osjs/settings');
-    const defaults = this.core.config('desktop.settings.widgets');
-
-    const widgets = settings.get('osjs/desktop', 'widgets', defaults)
-      .map((p, i) => i === this.index ? Object.assign({}, p, {
-        options: this.options
-      }) : p);
-
-    return Promise.resolve(settings.set('osjs/desktop', 'widgets', widgets))
-      .then(() => settings.save());
-  }
-
   saveSettings() {
     this.saveDebounce = clearTimeout(this.saveDebounce);
-    this.saveDebounce = setTimeout(() => this._saveSettings(), 100);
+    this.saveDebounce = setTimeout(() => this.core.make('osjs/widgets').save(), 100);
+  }
+
+  getContextMenu() {
+    return [];
+  }
+
+  onDestroy() {
+  }
+
+  onResize() {
+  }
+
+  onMove() {
+  }
+
+  onContextMenu(ev) {
+    const menu = [
+      ...this.getContextMenu(),
+      {
+        label: 'Remove Widget',
+        onclick: () => {
+          this.core.make('osjs/widgets')
+            .remove(this);
+
+          this.core.make('osjs/widgets')
+            .save();
+        }
+      }
+    ];
+
+    this.core.make('osjs/contextmenu').show({
+      position: ev,
+      menu
+    });
   }
 
   _createDialog(options, callbackRender, callbackValue) {
