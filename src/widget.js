@@ -316,7 +316,7 @@ export default class Widget {
 
   _createDialog(options, callbackRender, callbackValue) {
     if (this.dialog) {
-      return;
+      return false;
     }
 
     const callbackButton = (btn, options) => {

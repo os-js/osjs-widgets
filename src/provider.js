@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import DigitalClock from './items/digitalclock'
+import DigitalClock from './items/digitalclock';
 
 /**
  * Widget Service Provider
