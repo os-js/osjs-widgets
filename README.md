@@ -13,6 +13,8 @@
 
 This is the Widgets module for OS.js v3
 
+[![Build Status](https://travis-ci.org/os-js/osjs-widgets.svg?branch=master)](https://travis-ci.org/os-js/osjs-widgets)
+
 Resources:
 
 * https://manual.os-js.org/v3/install/
