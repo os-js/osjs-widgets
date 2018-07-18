@@ -1,6 +1,6 @@
 {
   "name": "@osjs/widgets",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "description": "OS.js v3 Widgets",
   "main": "index.js",
   "style": "index.scss",
@@ -19,7 +19,7 @@
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "@osjs/common": "^3.0.0-alpha.6",
+    "@osjs/common": "^3.0.0-alpha.13",
     "deepmerge": "^2.1.1"
   },
   "devDependencies": {
