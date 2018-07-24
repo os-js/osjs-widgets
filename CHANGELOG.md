@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.0-alpha.3
+
+* Prebuild npm package
+
 ## 3.0.0-alpha.2
 
 * Added stylelintrc
