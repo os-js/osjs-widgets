@@ -28,6 +28,7 @@
  * @licence Simplified BSD License
  */
 
+import './index.scss';
 import WidgetServiceProvider from './src/provider';
 import Widget from './src/widget';
 import DigitalClockWidget from './src/items/digitalclock';
