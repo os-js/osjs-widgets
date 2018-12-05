@@ -125,7 +125,7 @@ export default class DigitalClockWidget extends Widget {
     }, (btn, value) => {
       if (btn === 'ok') {
         this.options.fontFamily = value.name;
-        this.resize();
+        this.compute();
         this.saveSettings();
       }
     });
@@ -137,7 +137,7 @@ export default class DigitalClockWidget extends Widget {
     }, (btn, value) => {
       if (btn === 'ok') {
         this.options.fontColor = value.hex;
-        this.resize();
+        this.compute();
         this.saveSettings();
       }
     });
