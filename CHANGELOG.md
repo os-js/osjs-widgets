@@ -1,5 +1,10 @@
 # Changelog for osjs-widgets
 
+## 3.0.1
+
+* Updated dependencies
+* Fixed an invalid method call in digitalclock (#2)
+
 ## 3.0.0-alpha.4
 
 * Updated dependencies
