@@ -33,7 +33,7 @@ osjs.register(WidgetServiceProvider);
 And in your stylesheet (`src/client/index.scss`):
 
 ```css
-@import "~@osjs/widgets/index.scss";
+@import "~@osjs/widgets/dist/main.css";
 ```
 
 To set up a default set of widgets in the user settings, modify your client configuration file (`src/client/config.js`):
