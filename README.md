@@ -20,7 +20,13 @@ This is the Widgets module for OS.js v3
 * https://manual.os-js.org/v3/guide/provider/
 * https://manual.os-js.org/v3/tutorial/widget/
 
-## Usage
+## Installation
+
+First, install the module:
+
+```bash
+npm install --save --production @osjs/widgets
+```
 
 In your client bootstrap (`src/client/index.js`):
 
