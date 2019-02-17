@@ -22,7 +22,7 @@ This is the Widgets module for OS.js v3
 
 ## Usage
 
-In you startup scripts, simply import and register:
+In your client bootstrap (`src/client/index.js`):
 
 ```javascript
 import {WidgetServiceProvider} from '@osjs/widgets';
@@ -30,11 +30,13 @@ import {WidgetServiceProvider} from '@osjs/widgets';
 osjs.register(WidgetServiceProvider);
 ```
 
+And in your stylesheet (`src/client/index.scss`):
+
 ```css
 @import "~@osjs/widgets/index.scss";
 ```
 
-To set up a default set of widgets in the user settings, modify your client configuration file:
+To set up a default set of widgets in the user settings, modify your client configuration file (`src/client/config.js`):
 
 ```javascript
 {
