@@ -1,5 +1,18 @@
 # Changelog for osjs-widgets
 
+## 3.0.2
+
+* Stop rendering when widget is destroyed (#3)
+* Updated webpack configuration
+* Updated dependencies
+* Now using @osjs/stylelint-config
+* Updated dotfile usage
+* Updated copyright notices in preambles
+* Updated package.json scripts
+* Updated README
+* Updated eslintrc
+* Updated copyright(s)
+
 ## 3.0.1
 
 * Updated dependencies
