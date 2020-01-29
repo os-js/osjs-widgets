@@ -61,7 +61,7 @@ const getPosition = (core, position, nullValue = null) => {
   return {top, left, right, bottom};
 };
 
-const animator = (fps) => {
+const animator = (fps, stopFn) => {
   const interval = 1000 / fps;
   let last = performance.now();
 
@@ -75,7 +75,9 @@ const animator = (fps) => {
       cb();
     }
 
-    requestAnimationFrame(() => animate(cb));
+    if (!stopFn()) {
+      requestAnimationFrame(() => animate(cb));
+    }
   };
 
   return animate;
@@ -149,6 +151,7 @@ export default class Widget {
     this.$element = document.createElement('div');
     this.$canvas = document.createElement('canvas');
     this.context = this.$canvas.getContext('2d');
+    this.destroyed = false;
     this.saveDebounce = null;
     this.attributes = Object.assign({}, {
       aspect: false,
@@ -195,6 +198,10 @@ export default class Widget {
   }
 
   destroy() {
+    if (this.destroyed) {
+      return;
+    }
+
     this.onDestroy();
 
     this.saveDebounce = clearTimeout(this.saveDebounce);
@@ -211,10 +218,17 @@ export default class Widget {
 
     this.$canvas = null;
     this.$element = null;
+    this.destroyed = true;
   }
 
-  render() {
-
+  /**
+   * @param {Object} options
+   * @param {number} options.width
+   * @param {number} options.height
+   * @param {HTMLCanvasElement} options.canvas
+   * @param {CanvasRenderingContext2D} options.context
+   */
+  render(viewport) {
   }
 
   start() {
@@ -233,7 +247,7 @@ export default class Widget {
     render();
 
     if (this.attributes.canvas) {
-      animator(this.attributes.fps)(() => render());
+      animator(this.attributes.fps, () => this.destroyed)(() => render());
     }
   }
 
