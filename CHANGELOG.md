@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.3
+
+* Now using @osjs/dev-meta
+
 ## 3.0.2
 
 * Stop rendering when widget is destroyed (#3)
