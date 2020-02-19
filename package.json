@@ -34,7 +34,7 @@
     "deepmerge": "^4.2.2"
   },
   "devDependencies": {
-    "@osjs/dev-meta": "^1.0.2"
+    "@osjs/dev-meta": "^1.0.3"
   },
   "bugs": {
     "url": "https://github.com/os-js/osjs-widgets/issues"
