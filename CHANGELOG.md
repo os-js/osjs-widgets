@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.5 - 2020-07-15
+
+* Updated dependencies
+
 ## 3.0.3 - 2020-02-17
 
 * Now using @osjs/dev-meta
