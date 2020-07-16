@@ -1,5 +1,10 @@
 # Changelog for osjs-widgets
 
+## 3.0.6 - 2020-07-17
+
+* Changed root container usage
+* Updated exports
+
 ## 3.0.5 - 2020-07-15
 
 * Updated dependencies
