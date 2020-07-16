@@ -30,7 +30,7 @@
 
 .osjs-widget {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
 
   & > .osjs-widget-resize {
     display: none;

@@ -253,7 +253,7 @@ export default class Widget {
 
   init() {
     const $el = this.$element;
-    const $root = this.core.$root;
+    const $root = this.core.$contents;
 
     const resizer = document.createElement('div');
     resizer.classList.add('osjs-widget-resize');
