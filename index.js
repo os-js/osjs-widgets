@@ -29,12 +29,7 @@
  */
 
 import './index.scss';
-import WidgetServiceProvider from './src/provider';
-import Widget from './src/widget';
-import DigitalClockWidget from './src/items/digitalclock';
 
-export {
-  WidgetServiceProvider,
-  Widget,
-  DigitalClockWidget
-};
+export {default as WidgetServiceProvider} from './src/provider';
+export {default as Widget} from './src/widget';
+export {default as DigitalClockWidget} from './src/items/digitalclock';
