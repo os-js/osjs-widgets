@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.7 - 2020-07-31
+
+* Updated default z-index
+
 ## 3.0.6 - 2020-07-17
 
 * Changed root container usage
