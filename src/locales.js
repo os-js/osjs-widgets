@@ -30,9 +30,11 @@
 
 
 export const en_EN = {
+  LBL_ADD: 'Add Widget',
   LBL_REMOVE: 'Remove Widget'
 };
 
 export const nb_NO = {
+  LBL_ADD: 'Legg til Widget',
   LBL_REMOVE: 'Fjern Widget'
 };

@@ -29,6 +29,7 @@
  */
 
 import DigitalClock from './items/digitalclock';
+import * as translations from './locales';
 
 /**
  * Widget Service Provider
@@ -116,14 +117,17 @@ export default class WidgetServiceProvider {
     this.inited = true;
     this.widgets.forEach(({widget}) => widget.init());
 
-
     const desktop = this.core.make('osjs/desktop');
+    const __ = this.core
+      .make('osjs/locale')
+      .translatable(translations);
+
     if (typeof desktop.addContextMenuEntries === 'function') {
       desktop.addContextMenuEntries(() => {
         const widgets = this.core.make('osjs/widgets');
 
         return [{
-          label: 'Add Widget',
+          label: __('LBL_ADD'),
           items: widgets.list().map(t => ({
             label: t,
             onclick: () => {
