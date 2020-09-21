@@ -359,4 +359,9 @@ export default class Widget {
     return this.dialog;
   }
 
+  static metadata() {
+    return {
+      title: undefined
+    };
+  }
 }

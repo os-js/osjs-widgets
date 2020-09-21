@@ -128,13 +128,18 @@ export default class WidgetServiceProvider {
 
         return [{
           label: __('LBL_ADD'),
-          items: widgets.list().map(t => ({
-            label: t,
-            onclick: () => {
-              widgets.create({name: t});
-              widgets.save();
-            }
-          }))
+          items: widgets.list().map(t => {
+            const classRef = this.registry[t]
+            const metadata = classRef.metadata(this.core)
+
+            return {
+              label: metadata.title ? __(metadata.title) : t,
+              onclick: () => {
+                widgets.create({name: t});
+                widgets.save();
+              }
+            };
+          })
         }];
       });
     }
