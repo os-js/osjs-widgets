@@ -1,5 +1,10 @@
 # Changelog for osjs-widgets
 
+## 3.0.8 - 2020-09-21
+
+* Updated README
+* Added locales (#11)
+
 ## 3.0.7 - 2020-07-31
 
 * Updated default z-index
