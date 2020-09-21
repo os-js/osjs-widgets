@@ -29,6 +29,7 @@
  */
 
 import merge from 'deepmerge';
+import * as translations from './locales';
 
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 200;
@@ -308,10 +309,14 @@ export default class Widget {
   }
 
   onContextMenu(ev) {
+    const __ = this.core
+      .make('osjs/locale')
+      .translatable(translations);
+
     const menu = [
       ...this.getContextMenu(),
       {
-        label: 'Remove Widget',
+        label: __('LBL_REMOVE'),
         onclick: () => {
           this.core.make('osjs/widgets')
             .remove(this);
