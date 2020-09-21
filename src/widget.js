@@ -92,7 +92,7 @@ const onmousedown = (ev, $root, widget) => {
     left: widget.$element.offsetLeft,
     top: widget.$element.offsetTop
   };
-  const startDimension = Object.assign({}, widget.options.dimension);
+  const startDimension = {...widget.options.dimension};
   const resize = ev.target.classList.contains('osjs-widget-resize');
   const {minDimension, maxDimension} = widget.attributes;
 
@@ -154,8 +154,7 @@ export default class Widget {
     this.context = this.$canvas.getContext('2d');
     this.destroyed = false;
     this.saveDebounce = null;
-    this.attributes = Object.assign({}, {
-      aspect: false,
+    this.attributes = {aspect: false,
       canvas: true,
       fps: 1,
       position: {
@@ -172,14 +171,11 @@ export default class Widget {
       maxDimension: {
         width: MAX_WIDTH,
         height: MAX_HEIGHT
-      }
-    }, attrs);
+      }, ...attrs};
 
     if (this.attributes.minDimension === null) {
-      this.attributes.minDimension = Object.assign({
-        width: MIN_WIDTH,
-        height: MIN_HEIGHT,
-      }, this.attributes.dimension);
+      this.attributes.minDimension = {width: MIN_WIDTH,
+        height: MIN_HEIGHT, ...this.attributes.dimension};
     }
 
     if (this.attributes.aspect === true) {
@@ -192,10 +188,8 @@ export default class Widget {
       this.attributes.maxDimension.height = maxDimension.width * aspect;
     }
 
-    this.options = Object.assign({
-      position: Object.assign({}, this.attributes.position),
-      dimension: Object.assign({}, this.attributes.dimension)
-    }, settings, options);
+    this.options = {position: {...this.attributes.position},
+      dimension: {...this.attributes.dimension}, ...settings, ...options};
   }
 
   destroy() {

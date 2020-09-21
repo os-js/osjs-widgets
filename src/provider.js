@@ -42,9 +42,7 @@ export default class WidgetServiceProvider {
     this.core = core;
     this.widgets = [];
     this.inited = false;
-    this.registry = Object.assign({
-      digitalclock: DigitalClock
-    }, args.registry || {});
+    this.registry = {digitalclock: DigitalClock, ...args.registry || {}};
   }
 
   destroy() {
@@ -129,8 +127,8 @@ export default class WidgetServiceProvider {
         return [{
           label: __('LBL_ADD'),
           items: widgets.list().map(t => {
-            const classRef = this.registry[t]
-            const metadata = classRef.metadata(this.core)
+            const classRef = this.registry[t];
+            const metadata = classRef.metadata(this.core);
 
             return {
               label: metadata.title ? __(metadata.title) : t,
