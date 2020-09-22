@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.10 - 2020-09-22
+
+* Minor cleanups
+
 ## 3.0.9 - 2020-09-22
 
 * Added support for widget context menu titles (#11)
