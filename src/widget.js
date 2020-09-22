@@ -40,7 +40,10 @@ const EMIT_TIMEOUT = 44;
 const isNull = val => typeof val === 'undefined' || val === null;
 
 const getPosition = (core, position, nullValue = null) => {
-  const rect = core.make('osjs/desktop').getRect();
+  const rect = core.destroyed
+    ? {}
+    : core.make('osjs/desktop').getRect();
+
   let {top, left, right, bottom} = position;
 
   if (isNull(left) && isNull(right)) {
@@ -154,7 +157,8 @@ export default class Widget {
     this.context = this.$canvas.getContext('2d');
     this.destroyed = false;
     this.saveDebounce = null;
-    this.attributes = {aspect: false,
+    this.attributes = {
+      aspect: false,
       canvas: true,
       fps: 1,
       position: {
@@ -174,8 +178,11 @@ export default class Widget {
       }, ...attrs};
 
     if (this.attributes.minDimension === null) {
-      this.attributes.minDimension = {width: MIN_WIDTH,
-        height: MIN_HEIGHT, ...this.attributes.dimension};
+      this.attributes.minDimension = {
+        width: MIN_WIDTH,
+        height: MIN_HEIGHT,
+        ...this.attributes.dimension
+      };
     }
 
     if (this.attributes.aspect === true) {
@@ -188,8 +195,12 @@ export default class Widget {
       this.attributes.maxDimension.height = maxDimension.width * aspect;
     }
 
-    this.options = {position: {...this.attributes.position},
-      dimension: {...this.attributes.dimension}, ...settings, ...options};
+    this.options = {
+      position: {...this.attributes.position},
+      dimension: {...this.attributes.dimension},
+      ...settings,
+      ...options
+    };
   }
 
   destroy() {
@@ -197,12 +208,13 @@ export default class Widget {
       return;
     }
 
+    this.destroyed = true;
     this.onDestroy();
 
     this.saveDebounce = clearTimeout(this.saveDebounce);
 
     if (this.dialog) {
-      this.dialog = this.dialog.destroy();
+      this.dialog.destroy();
     }
 
     if (this.$element) {
@@ -213,7 +225,10 @@ export default class Widget {
 
     this.$canvas = null;
     this.$element = null;
-    this.destroyed = true;
+    this.context = null;
+    this.dialog = null;
+    this.options = {};
+    this.attributes = {};
   }
 
   /**
@@ -247,26 +262,28 @@ export default class Widget {
   }
 
   init() {
-    const $el = this.$element;
     const $root = this.core.$contents;
-
     const resizer = document.createElement('div');
     resizer.classList.add('osjs-widget-resize');
 
-    $el.appendChild(resizer);
-    $el.addEventListener('mousedown', ev => onmousedown(ev, $root, this));
-    $el.addEventListener('contextmenu', ev => this.onContextMenu(ev));
-    $el.classList.add('osjs-widget');
-    $root.appendChild($el);
+    this.$element.appendChild(resizer);
+    this.$element.addEventListener('mousedown', ev => onmousedown(ev, $root, this));
+    this.$element.addEventListener('contextmenu', ev => this.onContextMenu(ev));
+    this.$element.classList.add('osjs-widget');
+    $root.appendChild(this.$element);
 
     if (this.attributes.canvas) {
-      $el.appendChild(this.$canvas);
+      this.$element.appendChild(this.$canvas);
     }
 
     this.start();
   }
 
   updateDimension() {
+    if (this.destroyed) {
+      return;
+    }
+
     const {width, height} = this.options.dimension;
     this.$element.style.width = String(width) + 'px';
     this.$element.style.height = String(height) + 'px';
@@ -275,6 +292,10 @@ export default class Widget {
   }
 
   updatePosition() {
+    if (this.destroyed) {
+      return;
+    }
+
     const {left, right, top, bottom} = getPosition(this.core, this.options.position, 'auto');
     const getValue = val => typeof val === 'string' ? val : `${val}px`;
 
