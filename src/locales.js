@@ -40,3 +40,10 @@ export const nb_NO = {
   LBL_REMOVE: 'Fjern Widget',
   WIDGET_DIGITALCLOCK: 'Digitalklokke'
 };
+
+export const fa_FA = {
+  LBL_ADD: 'افزودن ابزارک',
+  LBL_REMOVE: 'حذف ابزارک',
+  WIDGET_DIGITALCLOCK: 'ساعت دیجیتال'
+};
+
