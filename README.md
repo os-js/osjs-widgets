@@ -8,11 +8,10 @@
 [![Support](https://img.shields.io/badge/opencollective-donate-red.svg)](https://opencollective.com/osjs)
 [![Donate](https://img.shields.io/badge/liberapay-donate-yellowgreen.svg)](https://liberapay.com/os-js/)
 [![Donate](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/andersevenrud)
-[![Community](https://img.shields.io/badge/join-community-green.svg)](https://community.os-js.org/)
 
-# OS.js v3 Widgets module
+# OS.js Widgets module
 
-This is the Widgets module for OS.js v3
+This is the Widgets module for OS.js
 
 * https://manual.os-js.org/v3/install/
 * https://manual.os-js.org/v3/guide/provider/
@@ -65,7 +64,7 @@ A contextmenu entry on the desktop is automatically added so users can add these
 
 ## Documentation
 
-See the [Official Manuals](https://manual.os-js.org/v3/) for articles, tutorials and guides.
+See the [Official Manuals](https://manual.os-js.org/) for articles, tutorials and guides.
 
 ## Links
 
