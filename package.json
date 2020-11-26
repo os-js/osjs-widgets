@@ -1,7 +1,7 @@
 {
   "name": "@osjs/widgets",
   "version": "3.0.11",
-  "description": "OS.js v3 Widgets",
+  "description": "OS.js Widgets",
   "main": "dist/main.js",
   "module": "dist/main.js",
   "style": "dist/main.scss",
@@ -35,7 +35,7 @@
     "deepmerge": "^4.2.2"
   },
   "devDependencies": {
-    "@osjs/dev-meta": "^1.1.1"
+    "@osjs/dev-meta": "^2.0.0"
   },
   "bugs": {
     "url": "https://github.com/os-js/osjs-widgets/issues"
