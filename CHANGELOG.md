@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.0.12 - 2020-11-26
+
+* Updated dependencies
+
 ## 3.0.11 - 2020-10-13
 
 * Added persian (fa_FA) translations (#13)
