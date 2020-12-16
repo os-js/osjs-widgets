@@ -1,5 +1,9 @@
 # Changelog for osjs-widgets
 
+## 3.1.0 - 2020-12-17
+
+* Added automatic position clamp on init/resize (#15) (#16)
+
 ## 3.0.12 - 2020-11-26
 
 * Updated dependencies
