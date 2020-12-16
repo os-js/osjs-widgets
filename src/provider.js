@@ -107,7 +107,7 @@ export default class WidgetServiceProvider {
     this.core.singleton('osjs/widgets', () => iface);
 
     this.core.on('osjs/desktop:transform', () => {
-      this.widgets.forEach(({widget}) => widget.updatePosition());
+      this.widgets.forEach(({widget}) => widget.updatePosition(true));
     });
   }
 
@@ -119,6 +119,12 @@ export default class WidgetServiceProvider {
     const __ = this.core
       .make('osjs/locale')
       .translatable(translations);
+
+    let resizeDebounce;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(() => this._clampWidgets(), 200);
+    });
 
     if (typeof desktop.addContextMenuEntries === 'function') {
       desktop.addContextMenuEntries(() => {
@@ -141,6 +147,15 @@ export default class WidgetServiceProvider {
         }];
       });
     }
+
+    this._clampWidgets();
   }
 
+  _clampWidgets(resize) {
+    if (resize && !this.core.config('windows.clampToViewport')) {
+      return;
+    }
+
+    this.widgets.forEach(w => w.widget.clampToViewport());
+  }
 }
