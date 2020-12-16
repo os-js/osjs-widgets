@@ -142,6 +142,16 @@ const onmousedown = (ev, $root, widget) => {
   $root.setAttribute('data-window-action', String(true));
 };
 
+export const clampPosition = (rect, {dimension, position}) => {
+  const maxLeft = rect.width - dimension.width;
+  const maxTop = rect.height - dimension.height;
+
+  return {
+    left: Math.max(0, Math.min(maxLeft, position.left)),
+    top: Math.max(0, Math.max(rect.top, Math.min(maxTop, position.top)))
+  };
+};
+
 export default class Widget {
 
   /**
@@ -259,6 +269,8 @@ export default class Widget {
     if (this.attributes.canvas) {
       animator(this.attributes.fps, () => this.destroyed)(() => render());
     }
+
+    setTimeout(() => this.clampToViewport(), 100);
   }
 
   init() {
@@ -372,6 +384,17 @@ export default class Widget {
     this.dialog.win.on('destroy', () => (this.dialog = null));
 
     return this.dialog;
+  }
+
+  clampToViewport() {
+    const {top, left} = this.options.position;
+    const rect = this.core.make('osjs/desktop').getRect();
+    const pos = clampPosition(rect, this.options);
+
+    if (pos.left !== left || pos.top !== top) {
+      this.options.position = {...pos};
+      this.updatePosition();
+    }
   }
 
   static metadata() {
