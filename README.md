@@ -13,9 +13,9 @@
 
 This is the Widgets module for OS.js
 
-* https://manual.os-js.org/v3/install/
-* https://manual.os-js.org/v3/guide/provider/
-* https://manual.os-js.org/v3/tutorial/widget/
+* https://manual.os-js.org/install/
+* https://manual.os-js.org/guide/provider/
+* https://manual.os-js.org/tutorial/widget/
 
 ## Installation
 
